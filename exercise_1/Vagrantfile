@@ -7,19 +7,13 @@
 # you're doing.
 Vagrant.configure(2) do |config|
     config.vm.define 'pxe_server' do |config|
-      config.vm.box = "debian/jessie64" # "debian/stretch64"
-      config.vm.box_version = "8.10.0" #"9.4.0"
+      config.vm.box = "debian/stretch64"
+      config.vm.box_version = "9.9.1"
       config.vm.synced_folder '.', '/vagrant', disabled: true
       config.vm.synced_folder '../assets/', '/var/lib/matchbox/assets', disabled: false
       config.ssh.insert_key = false
 
       config.vm.provision "shell", path: "scripts/matchbox_server.sh"
-
-      config.vm.provider :libvirt do |lv|
-        lv.memory = "1024"
-        lv.keymap = "de"
-        lv.cpus = "1"
-      end
 
       config.vm.provider :virtualbox do |vb|
         vb.memory = "1024"
@@ -29,14 +23,14 @@ Vagrant.configure(2) do |config|
 
       # public network
       config.vm.network "private_network",
-                        ip: "192.168.0.254",
-                        libvirt__network_name: "pxe_network",
-                        :libvirt__dhcp_enabled => false
+                        ip: "192.168.210.254"
+                        # libvirt__network_name: "pxe_network",
+                        # :libvirt__dhcp_enabled => false
 
       config.vm.network "private_network",
-                        ip: "192.168.1.254",
-                        libvirt__network_name: "pxe_network",
-                        :libvirt__dhcp_enabled => false,
+                        ip: "192.168.211.254",
+                        # libvirt__network_name: "pxe_network",
+                        # :libvirt__dhcp_enabled => false
                         virtualbox__intnet: "pxe_network"
   end
 end

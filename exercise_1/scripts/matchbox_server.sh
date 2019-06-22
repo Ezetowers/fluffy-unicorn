@@ -341,21 +341,21 @@ option ipxe.nfs code 41 = unsigned integer 8;
 ## End of Static Options
 ##
 
-subnet 192.168.1.0 netmask 255.255.255.0 {
-    option routers 192.168.1.254;
-    option domain-name-servers 192.168.0.254;
+subnet 192.168.211.0 netmask 255.255.255.0 {
+    option routers 192.168.211.254;
+    option domain-name-servers 192.168.210.254;
     option domain-name "unicorn.k8s.zone";
-    option tftp-server-name "192.168.0.254";
+    option tftp-server-name "192.168.210.254";
     default-lease-time 600;
     max-lease-time 7200;
 }
 
 host kmaster-fluffy-unicorn-az01-001 {
    hardware ethernet 52:54:00:fb:53:a6;
-   fixed-address 192.168.1.2;
+   fixed-address 192.168.211.2;
    option host-name "kmaster-fluffy-unicorn-az01-001}";
    if exists user-class and option user-class = "iPXE" {
-     filename "http://192.168.0.254:8080/boot.ipxe";
+     filename "http://192.168.210.254:8080/boot.ipxe";
    } else {
      filename "ipxe.pxe";
    }
@@ -363,10 +363,10 @@ host kmaster-fluffy-unicorn-az01-001 {
 
 host kworker-fluffy-unicorn-az01-001 {
    hardware ethernet 52:54:00:fb:53:a9;
-   fixed-address 192.168.1.3;
+   fixed-address 192.168.211.3;
    option host-name "kworker-fluffy-unicorn-az01-001";
    if exists user-class and option user-class = "iPXE" {
-     filename "http://192.168.0.254:8080/boot.ipxe";
+     filename "http://192.168.210.254:8080/boot.ipxe";
    } else {
      filename "ipxe.pxe";
    }
@@ -389,11 +389,11 @@ ExecStart=/usr/sbin/dnsmasq \
   --interface=eth1,eth2,eth3,eth4 \
   --except-interface=eth0,docker0,lo \
   --tftp-root=/var/lib/tftpboot \
-  --address=/matchbox.example.com/192.168.0.254 \
-  --address=/kmaster-fluffy-unicorn-az01-001/192.168.1.2 \
-  --address=/kmaster-fluffy-unicorn-az01-001.unicorn.k8s.zone/192.168.1.2 \
-  --address=/kworker-fluffy-unicorn-az01-001/192.168.1.3 \
-  --address=/kworker-fluffy-unicorn-az01-001.unicorn.k8s.zone/192.168.1.3
+  --address=/matchbox.example.com/192.168.210.254 \
+  --address=/kmaster-fluffy-unicorn-az01-001/192.168.211.2 \
+  --address=/kmaster-fluffy-unicorn-az01-001.unicorn.k8s.zone/192.168.211.2 \
+  --address=/kworker-fluffy-unicorn-az01-001/192.168.211.3 \
+  --address=/kworker-fluffy-unicorn-az01-001.unicorn.k8s.zone/192.168.211.3
 [Install]
 WantedBy=multi-user.target
 EOF

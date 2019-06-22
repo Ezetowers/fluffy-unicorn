@@ -9,11 +9,11 @@ pxe_server: env-file
 	vagrant ssh pxe_server -c "sudo apt-get install -y rsync"
 	rsync -avz -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key" \
 		--rsync-path="sudo rsync" \
-		$(shell pwd)/.env vagrant@192.168.0.254:/etc/environment
+		$(shell pwd)/.env vagrant@192.168.210.254:/etc/environment
 
 	rsync -avz -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key" \
 		--rsync-path="sudo rsync"  \
-		$(HOME)/.vagrant.d/insecure_private_key vagrant@192.168.0.254:/home/vagrant/insecure_private_key
+		$(HOME)/.vagrant.d/insecure_private_key vagrant@192.168.210.254:/home/vagrant/insecure_private_key
 	vagrant ssh pxe_server -c 'sudo chown vagrant:vagrant insecure_private_key'
 
 	vagrant provision
@@ -34,8 +34,8 @@ terraform_config:
 	@#so we just manually rsync the confd templates and config
 	rsync -avz -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key" \
 		--rsync-path="sudo rsync" \
-		$(shell pwd)/terraform/* vagrant@192.168.0.254:/etc/terraform/
+		$(shell pwd)/terraform/* vagrant@192.168.210.254:/etc/terraform/
 	vagrant ssh pxe_server -c 'cd /etc/terraform && sudo terraform init && sudo terraform plan && sudo terraform apply --auto-approve'
 	# Validate that everything worked
-	curl -s --fail "http://192.168.0.254:8080/ignition?mac=52-54-00-fb-53-a6" > /dev/null
-	curl -s --fail "http://192.168.0.254:8080/ignition?mac=52-54-00-fb-53-a6&os=installed" > /dev/null
+	curl -s --fail "http://192.168.210.254:8080/ignition?mac=52-54-00-fb-53-a6" > /dev/null
+	curl -s --fail "http://192.168.210.254:8080/ignition?mac=52-54-00-fb-53-a6&os=installed" > /dev/null
